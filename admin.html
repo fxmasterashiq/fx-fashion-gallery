@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FX Fashion Gallery — Admin</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
+  color:#111;
+}
+header{
+  background:#111;
+  color:#fff;
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.logo{
+  font-size:22px;
+  font-weight:800;
+}
+.logo span{color:#ff7a00}
+.container{
+  max-width:1100px;
+  margin:25px auto;
+  padding:0 15px;
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:25px;
+}
+.card{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 3px 15px rgba(0,0,0,.08);
+}
+.card h3{font-size:14px;color:#777}
+.card strong{
+  display:block;
+  font-size:28px;
+  margin-top:8px;
+}
+.panel{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  box-shadow:0 3px 15px rgba(0,0,0,.08);
+}
+.panel h2{
+  margin-bottom:18px;
+}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin:7px 0 12px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  font-size:15px;
+}
+button{
+  border:0;
+  padding:11px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.add{
+  background:#ff7a00;
+  color:#fff;
+}
+.delete{
+  background:#e53935;
+  color:#fff;
+}
+.clear{
+  background:#111;
+  color:#fff;
+}
+.product{
+  border:1px solid #eee;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+.product img{
+  width:65px;
+  height:65px;
+  object-fit:cover;
+  border-radius:8px;
+}
+.product-info{
+  flex:1;
+}
+.product-info b{display:block}
+.order{
+  border:1px solid #eee;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:12px;
+}
+.order strong{font-size:17px}
+.small{
+  color:#777;
+  font-size:13px;
+  margin-top:5px;
+}
+.empty{
+  text-align:center;
+  color:#777;
+  padding:20px;
+}
+@media(max-width:700px){
+  .cards{grid-template-columns:1fr}
+  .product{align-items:flex-start}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">FX <span>Fashion Gallery</span></div>
+  <div>ADMIN PANEL</div>
+</header>
+
+<div class="container">
+
+  <div class="cards">
+    <div class="card">
+      <h3>Total Products</h3>
+      <strong id="productCount">0</strong>
+    </div>
+
+    <div class="card">
+      <h3>Total Orders</h3>
+      <strong id="orderCount">0</strong>
+    </div>
+
+    <div class="card">
+      <h3>Total Sales</h3>
+      <strong id="salesCount">৳0</strong>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>➕ Add New Product</h2>
+
+    <input id="pName" placeholder="Product Name">
+
+    <input id="pPrice" type="number" placeholder="Price (BDT)">
+
+    <input id="pOldPrice" type="number" placeholder="Old Price (optional)">
+
+    <select id="pCategory">
+      <option value="T-Shirts">T-Shirts</option>
+      <option value="Shirts">Shirts</option>
+      <option value="Pants">Pants</option>
+      <option value="New Arrivals">New Arrivals</option>
+    </select>
+
+    <input id="pImage" placeholder="Product Image URL">
+
+    <textarea id="pDescription" placeholder="Product Description"></textarea>
+
+    <button class="add" onclick="addProduct()">ADD PRODUCT</button>
+  </div>
+
+  <div class="panel">
+    <h2>🛍️ Products</h2>
+    <div id="productList"></div>
+  </div>
+
+  <div class="panel">
+    <h2>📦 Orders</h2>
+    <div id="orderList"></div>
+
+    <button class="clear" onclick="clearOrders()">
+      Clear All Orders
+    </button>
+  </div>
+
+</div>
+
+<script>
+
+function getProducts(){
+  return JSON.parse(localStorage.getItem("fxProducts") || "[]");
+}
+
+function saveProducts(products){
+  localStorage.setItem("fxProducts",JSON.stringify(products));
+}
+
+function getOrders(){
+  return JSON.parse(localStorage.getItem("fxOrders") || "[]");
+}
+
+function addProduct(){
+
+  const name=document.getElementById("pName").value.trim();
+  const price=document.getElementById("pPrice").value;
+  const oldPrice=document.getElementById("pOldPrice").value;
+  const category=document.getElementById("pCategory").value;
+  const image=document.getElementById("pImage").value.trim();
+  const description=document.getElementById("pDescription").value.trim();
+
+  if(!name || !price || !image){
+    alert("Product Name, Price and Image URL are required.");
+    return;
+  }
+
+  const products=getProducts();
+
+  products.push({
+    id:Date.now(),
+    name:name,
+    price:Number(price),
+    oldPrice:Number(oldPrice || 0),
+    category:category,
+    image:image,
+    description:description
+  });
+
+  saveProducts(products);
+
+  document.getElementById("pName").value="";
+  document.getElementById("pPrice").value="";
+  document.getElementById("pOldPrice").value="";
+  document.getElementById("pImage").value="";
+  document.getElementById("pDescription").value="";
+
+  render();
+
+  alert("Product added successfully!");
+}
+
+function deleteProduct(id){
+
+  if(!confirm("Delete this product?")) return;
+
+  let products=getProducts();
+
+  products=products.filter(p=>p.id!==id);
+
+  saveProducts(products);
+
+  render();
+}
+
+function renderProducts(){
+
+  const products=getProducts();
+  const box=document.getElementById("productList");
+
+  document.getElementById("productCount").textContent=products.length;
+
+  if(!products.length){
+    box.innerHTML='<div class="empty">No products added yet.</div>';
+    return;
+  }
+
+  box.innerHTML=products.map(p=>`
+
+    <div class="product">
+
+      <img src="${p.image}" onerror="this.style.display='none'">
+
+      <div class="product-info">
+        <b>${escapeHTML(p.name)}</b>
+        <span>৳${p.price}</span>
+        <div class="small">${escapeHTML(p.category)}</div>
+      </div>
+
+      <button class="delete" onclick="deleteProduct(${p.id})">
+        Delete
+      </button>
+
+    </div>
+
+  `).join("");
+}
+
+function renderOrders(){
+
+  const orders=getOrders();
+  const box=document.getElementById("orderList");
+
+  document.getElementById("orderCount").textContent=orders.length;
+
+  let total=0;
+
+  orders.forEach(o=>{
+    total += Number(o.total || 0);
+  });
+
+  document.getElementById("salesCount").textContent="৳"+total;
+
+  if(!orders.length){
+    box.innerHTML='<div class="empty">No orders yet.</div>';
+    return;
+  }
+
+  box.innerHTML=orders.map(o=>`
+
+    <div class="order">
+
+      <strong>Order #${escapeHTML(String(o.id || ""))}</strong>
+
+      <div class="small">
+        Customer: ${escapeHTML(o.name || "")}
+      </div>
+
+      <div class="small">
+        Phone: ${escapeHTML(o.phone || "")}
+      </div>
+
+      <div class="small">
+        Address: ${escapeHTML(o.address || "")}
+      </div>
+
+      <div class="small">
+        Total: ৳${Number(o.total || 0)}
+      </div>
+
+    </div>
+
+  `).join("");
+}
+
+function clearOrders(){
+
+  if(!confirm("Delete all orders?")) return;
+
+  localStorage.removeItem("fxOrders");
+
+  render();
+}
+
+function escapeHTML(text){
+
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function render(){
+  renderProducts();
+  renderOrders();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
+
