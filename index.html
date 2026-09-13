@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1031,3 +1031,21 @@ updateCartCount();
 </body>
 </html>
 
+
+<script>
+(function(){
+  const adminProducts = JSON.parse(localStorage.getItem("fxProducts") || "[]");
+
+  if (adminProducts.length && typeof products !== "undefined") {
+    adminProducts.forEach(p => {
+      if (!products.some(x => String(x.id) === String(p.id))) {
+        products.push(p);
+      }
+    });
+
+    if (typeof renderProducts === "function") {
+      renderProducts(products);
+    }
+  }
+})();
+</script>
