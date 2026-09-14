@@ -216,7 +216,14 @@ button{
 
   <div class="panel">
     <h2>📦 Orders</h2>
-    <div id="orderList"></div>
+    <input
+  id="orderSearch"
+  type="text"
+  placeholder="Search Order ID, Name or Phone..."
+  oninput="renderOrders()"
+  style="width:100%;box-sizing:border-box;padding:14px 16px;margin:0 0 15px;border:1px solid #ddd;border-radius:10px;font-size:16px;"
+>
+<div id="orderList"></div>
 
     <button class="clear" onclick="clearOrders()">
       Clear All Orders
@@ -412,6 +419,21 @@ function renderOrders(){
 
   const orders=getOrders();
   const box=document.getElementById("orderList");
+  const searchInput=document.getElementById("orderSearch");
+  const search=(searchInput ? searchInput.value : "").trim().toLowerCase();
+
+  const filteredOrders=orders.filter(o=>{
+    if(!search) return true;
+
+    return [
+      o.id,
+      o.name,
+      o.phone,
+      o.address
+    ].some(value =>
+      String(value || "").toLowerCase().includes(search)
+    );
+  });
 
   document.getElementById("orderCount").textContent=orders.length;
 
@@ -428,7 +450,12 @@ function renderOrders(){
     return;
   }
 
-  box.innerHTML=orders.map(o=>`
+  if(!filteredOrders.length){
+    box.innerHTML='<div class="empty">No matching orders found.</div>';
+    return;
+  }
+
+  box.innerHTML=filteredOrders.map(o=>`
 
     <div class="order">
 
