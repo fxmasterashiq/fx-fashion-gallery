@@ -477,6 +477,12 @@ function renderOrders(){
         Total: ৳${Number(o.total || 0)}
       </div>
 
+      <button type="button"
+        onclick="deleteOrder('${String(o.id || "").replace("'", "\\'")}')"
+        style="margin-top:10px;background:#dc3545;color:white;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;">
+        Delete Order
+      </button>
+
       <details class="order-details">
         <summary>View Order Details</summary>
         <div class="order-items">
@@ -531,6 +537,17 @@ function updateOrderStatus(orderId, status){
 
   renderOrders();
 
+}
+
+function deleteOrder(orderId){
+  if(!confirm("Delete this order?")) return;
+
+  const orders = getOrders().filter(
+    o => String(o.id || "") !== String(orderId)
+  );
+
+  localStorage.setItem("fxOrders", JSON.stringify(orders));
+  render();
 }
 
 function clearOrders(){
