@@ -423,9 +423,38 @@ function renderOrders(){
         Total: ৳${Number(o.total || 0)}
       </div>
 
+      <div class="small">
+        Status:
+        <select onchange="updateOrderStatus('${String(o.id || "").replace("'", "\\'")}', this.value)">
+          ${["Pending","Confirmed","Shipped","Delivered","Cancelled"].map(st =>
+            `<option value="${st}" ${(o.status || "Pending") === st ? "selected" : ""}>${st}</option>`
+          ).join("")}
+        </select>
+      </div>
+
     </div>
 
   `).join("");
+}
+
+function updateOrderStatus(orderId, status){
+
+  const orders = getOrders();
+
+  const updated = orders.map(o => {
+    if(String(o.id) === String(orderId)){
+      return {
+        ...o,
+        status: status
+      };
+    }
+    return o;
+  });
+
+  localStorage.setItem("fxOrders", JSON.stringify(updated));
+
+  renderOrders();
+
 }
 
 function clearOrders(){
