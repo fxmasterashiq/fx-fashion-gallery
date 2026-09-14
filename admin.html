@@ -81,6 +81,10 @@ button{
   background:#e53935;
   color:#fff;
 }
+.edit{
+  background:#1976d2;
+  color:#fff;
+}
 .clear{
   background:#111;
   color:#fff;
@@ -175,7 +179,7 @@ button{
 
     <textarea id="pDescription" placeholder="Product Description"></textarea>
 
-    <button class="add" onclick="addProduct()">ADD PRODUCT</button>
+    <button class="add" onclick="handleProductSave()">ADD PRODUCT</button>
   </div>
 
   <div class="panel">
@@ -247,6 +251,85 @@ function addProduct(){
   alert("Product added successfully!");
 }
 
+function editProduct(id){
+  const products=getProducts();
+  const p=products.find(x=>String(x.id)===String(id));
+
+  if(!p) return;
+
+  document.getElementById("pName").value=p.name || "";
+  document.getElementById("pPrice").value=p.price || "";
+  document.getElementById("pOldPrice").value=p.oldPrice || "";
+  document.getElementById("pCategory").value=p.category || "T-Shirts";
+  document.getElementById("pImage").value=p.image || "";
+  document.getElementById("pDescription").value=p.description || "";
+
+  const btn=document.querySelector('.add');
+  btn.textContent="SAVE CHANGES";
+  btn.dataset.editId=id;
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function saveEditedProduct(){
+  const id=document.querySelector('.add').dataset.editId;
+  if(!id) return false;
+
+  const name=document.getElementById("pName").value.trim();
+  const price=document.getElementById("pPrice").value;
+  const oldPrice=document.getElementById("pOldPrice").value;
+  const category=document.getElementById("pCategory").value;
+  const image=document.getElementById("pImage").value.trim();
+  const description=document.getElementById("pDescription").value.trim();
+
+  if(!name || !price || !image){
+    alert("Product Name, Price and Image URL are required.");
+    return true;
+  }
+
+  const products=getProducts();
+  const index=products.findIndex(x=>String(x.id)===String(id));
+
+  if(index===-1) return true;
+
+  products[index]={
+    ...products[index],
+    name:name,
+    price:Number(price),
+    oldPrice:Number(oldPrice || 0),
+    category:category,
+    image:image,
+    description:description
+  };
+
+  saveProducts(products);
+
+  document.getElementById("pName").value="";
+  document.getElementById("pPrice").value="";
+  document.getElementById("pOldPrice").value="";
+  document.getElementById("pImage").value="";
+  document.getElementById("pDescription").value="";
+
+  const btn=document.querySelector('.add');
+  btn.textContent="ADD PRODUCT";
+  delete btn.dataset.editId;
+
+  render();
+  alert("Product updated successfully!");
+  return true;
+}
+
+function handleProductSave(){
+  const btn=document.querySelector('.add');
+
+  if(btn.dataset.editId){
+    saveEditedProduct();
+    return;
+  }
+
+  addProduct();
+}
+
 function deleteProduct(id){
 
   if(!confirm("Delete this product?")) return;
@@ -284,9 +367,14 @@ function renderProducts(){
         <div class="small">${escapeHTML(p.category)}</div>
       </div>
 
-      <button class="delete" onclick="deleteProduct(${p.id})">
-        Delete
-      </button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="edit" onclick="editProduct(${p.id})">
+          Edit
+        </button>
+        <button class="delete" onclick="deleteProduct(${p.id})">
+          Delete
+        </button>
+      </div>
 
     </div>
 
