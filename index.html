@@ -839,12 +839,29 @@ function viewProduct(id){
 }
 
 function addToCart(id){
-  const item=cart.find(x=>x.id===id);
+  const product=products.find(x=>String(x.id)===String(id));
+
+  if(!product){
+    alert("Product not found.");
+    return;
+  }
+
+  const stock=Number(product.stock ?? 0);
+  const item=cart.find(x=>String(x.id)===String(id));
+
+  if(stock <= 0){
+    alert("OUT OF STOCK");
+    return;
+  }
 
   if(item){
+    if(item.qty >= stock){
+      alert("Only "+stock+" item(s) available in stock.");
+      return;
+    }
     item.qty++;
   }else{
-    cart.push({id:id,qty:1});
+    cart.push({id:product.id,qty:1});
   }
 
   saveCart();
@@ -975,6 +992,37 @@ function placeOrder(event){
     date:new Date().toLocaleString(),
     items:cart
   };
+
+  // Re-check stock before confirming the order
+  for(const item of cart){
+    const product=products.find(x=>String(x.id)===String(item.id));
+    const stock=Number(product?.stock ?? 0);
+
+    if(!product || item.qty > stock){
+      alert("Sorry, stock is not available for one or more products.");
+      return;
+    }
+  }
+
+  // Reduce stock after successful order
+  const adminProducts=JSON.parse(localStorage.getItem("fxProducts") || "[]");
+
+  cart.forEach(item=>{
+    const product=products.find(x=>String(x.id)===String(item.id));
+    if(!product) return;
+
+    product.stock=Math.max(0,Number(product.stock ?? 0)-Number(item.qty));
+
+    const adminProduct=adminProducts.find(
+      x=>String(x.id)===String(item.id)
+    );
+
+    if(adminProduct){
+      adminProduct.stock=product.stock;
+    }
+  });
+
+  localStorage.setItem("fxProducts",JSON.stringify(adminProducts));
 
   const orders=JSON.parse(localStorage.getItem("fxOrders") || "[]");
   orders.push(order);
