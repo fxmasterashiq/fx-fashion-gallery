@@ -573,6 +573,14 @@ footer{
     <button class="filter" onclick="filterProducts('New Arrivals',this)">New Arrivals</button>
   </div>
 
+  <div style="margin:20px 0">
+    <input id="productSearch"
+      type="text"
+      placeholder="Search products..."
+      oninput="searchProducts()"
+      style="width:100%;padding:14px 18px;border:1px solid #ddd;border-radius:12px;font-size:16px;outline:none;box-sizing:border-box">
+  </div>
+
   <div class="products" id="productGrid"></div>
 </section>
 
@@ -1042,6 +1050,18 @@ function placeOrder(event){
   );
 
   event.target.reset();
+}
+
+function searchProducts(){
+  const query=document.getElementById("productSearch").value.trim().toLowerCase();
+
+  const filtered=products.filter(p =>
+    String(p.name || "").toLowerCase().includes(query) ||
+    String(p.category || "").toLowerCase().includes(query) ||
+    String(p.description || "").toLowerCase().includes(query)
+  );
+
+  renderProducts(filtered);
 }
 
 function filterProducts(category,button){
