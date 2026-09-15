@@ -313,6 +313,8 @@ button{
 
     <input id="pPrice" type="number" placeholder="Price (BDT)">
 
+    <input id="pStock" type="number" min="0" placeholder="Stock Quantity" value="0">
+
     <input id="pOldPrice" type="number" placeholder="Old Price (optional)">
 
     <select id="pCategory">
@@ -374,6 +376,7 @@ function addProduct(){
   const category=document.getElementById("pCategory").value;
   const image=document.getElementById("pImage").value.trim();
   const description=document.getElementById("pDescription").value.trim();
+  const stock=document.getElementById("pStock").value;
 
   if(!name || !price || !image){
     alert("Product Name, Price and Image URL are required.");
@@ -396,6 +399,7 @@ function addProduct(){
 
   document.getElementById("pName").value="";
   document.getElementById("pPrice").value="";
+  document.getElementById("pStock").value="";
   document.getElementById("pOldPrice").value="";
   document.getElementById("pImage").value="";
   document.getElementById("pDescription").value="";
@@ -413,6 +417,7 @@ function editProduct(id){
 
   document.getElementById("pName").value=p.name || "";
   document.getElementById("pPrice").value=p.price || "";
+  document.getElementById("pStock").value=p.stock ?? 0;
   document.getElementById("pOldPrice").value=p.oldPrice || "";
   document.getElementById("pCategory").value=p.category || "T-Shirts";
   document.getElementById("pImage").value=p.image || "";
@@ -435,6 +440,7 @@ function saveEditedProduct(){
   const category=document.getElementById("pCategory").value;
   const image=document.getElementById("pImage").value.trim();
   const description=document.getElementById("pDescription").value.trim();
+  const stock=document.getElementById("pStock").value;
 
   if(!name || !price || !image){
     alert("Product Name, Price and Image URL are required.");
@@ -453,7 +459,8 @@ function saveEditedProduct(){
     oldPrice:Number(oldPrice || 0),
     category:category,
     image:image,
-    description:description
+    description:description,
+    stock:Number(stock || 0)
   };
 
   saveProducts(products);
@@ -519,6 +526,7 @@ function renderProducts(){
         <b>${escapeHTML(p.name)}</b>
         <span>৳${p.price}</span>
         <div class="small">${escapeHTML(p.category)}</div>
+        <div class="small"><b>${Number(p.stock || 0) > 0 ? "Stock: " + Number(p.stock || 0) : "OUT OF STOCK"}</b></div>
       </div>
 
       <div style="display:flex;gap:8px;flex-wrap:wrap">
