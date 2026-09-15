@@ -825,6 +825,12 @@ function viewProduct(id){
       </div>
       <p style="color:#777;margin:15px 0">${p.description}</p>
 
+      <div style="margin:12px 0;font-weight:700">
+        ${Number(p.stock ?? 0) > 0
+          ? "Stock Available: " + Number(p.stock ?? 0)
+          : "OUT OF STOCK"}
+      </div>
+
       <div class="form-group">
         <label>Size</label>
         <select id="productSize">
@@ -837,8 +843,9 @@ function viewProduct(id){
       </div>
 
       <button class="btn btn-primary" style="width:100%;margin:0"
+        ${Number(p.stock ?? 0) <= 0 ? "disabled" : ""}
         onclick="addToCart(${p.id});closeModal('productModal')">
-        ADD TO CART
+        ${Number(p.stock ?? 0) > 0 ? "ADD TO CART" : "OUT OF STOCK"}
       </button>
     </div>
   `;
