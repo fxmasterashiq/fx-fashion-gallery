@@ -325,6 +325,8 @@ button{
     </select>
 
     <input id="pImage" placeholder="Product Image URL">
+<input id="pImageFile" type="file" accept="image/*" onchange="handleImageUpload(event)">
+<div id="imageUploadStatus" class="small"></div>
 
     <textarea id="pDescription" placeholder="Product Description"></textarea>
 
@@ -374,6 +376,27 @@ function addProduct(){
   const price=document.getElementById("pPrice").value;
   const oldPrice=document.getElementById("pOldPrice").value;
   const category=document.getElementById("pCategory").value;
+  function handleImageUpload(event){
+    const file=event.target.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=function(e){
+      const img=new Image();
+      img.onload=function(){
+        const max=1000;
+        const scale=Math.min(1,max/Math.max(img.width,img.height));
+        const canvas=document.createElement("canvas");
+        canvas.width=Math.round(img.width*scale);
+        canvas.height=Math.round(img.height*scale);
+        canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+        document.getElementById("pImage").value=canvas.toDataURL("image/jpeg",0.8);
+        document.getElementById("imageUploadStatus").textContent="Image uploaded successfully.";
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   const image=document.getElementById("pImage").value.trim();
   const description=document.getElementById("pDescription").value.trim();
   const stock=document.getElementById("pStock").value;
