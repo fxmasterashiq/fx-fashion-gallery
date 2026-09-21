@@ -817,7 +817,7 @@ function renderProducts(list=products){
 
         <div class="product-actions">
           <button class="small-btn" onclick="viewProduct(${p.id})">VIEW</button>
-          <button class="small-btn primary" onclick="addToCart(${p.id})">ADD TO CART</button>
+          <button class="small-btn primary" onclick="orderProduct(${p.id})">ORDER</button>
         </div>
       </div>
     </article>
@@ -857,13 +857,46 @@ function viewProduct(id){
 
       <button class="btn btn-primary" style="width:100%;margin:0"
         ${Number(p.stock ?? 0) <= 0 ? "disabled" : ""}
-        onclick="addToCart(${p.id});closeModal('productModal')">
-        ${Number(p.stock ?? 0) > 0 ? "ADD TO CART" : "OUT OF STOCK"}
+        onclick="orderProduct(${p.id})">
+        ${Number(p.stock ?? 0) > 0 ? "ORDER NOW" : "OUT OF STOCK"}
       </button>
     </div>
   `;
 
   document.getElementById("productModal").style.display="block";
+}
+
+function orderProduct(id){
+  const product=products.find(x=>String(x.id)===String(id));
+
+  if(!product){
+    alert("Product not found.");
+    return;
+  }
+
+  if(Number(product.stock ?? 0) <= 0){
+    alert("Sorry, this product is out of stock.");
+    return;
+  }
+
+  cart=[{
+    id:product.id,
+    qty:1,
+    size:"M"
+  }];
+
+  saveCart();
+  updateCartCount();
+  closeModal("productModal");
+
+  const checkout=document.getElementById("checkoutModal");
+  if(checkout){
+    checkout.style.display="block";
+  }
+
+  if(typeof updateCheckoutTotal==="function"){
+    updateCheckoutTotal();
+  }
 }
 
 function addToCart(id){
