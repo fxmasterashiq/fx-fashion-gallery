@@ -717,6 +717,7 @@ const products = [
     name:"Premium Black Oversized T-Shirt",
     category:"T-Shirts",
     price:699,
+    stock:10,
     old:899,
     image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85",
     description:"Premium everyday oversized T-shirt with a clean modern look."
@@ -726,6 +727,7 @@ const products = [
     name:"Classic White Premium T-Shirt",
     category:"New Arrivals",
     price:649,
+    stock:10,
     old:849,
     image:"https://images.unsplash.com/photo-1583743814966-8936f37f4678?auto=format&fit=crop&w=900&q=85",
     description:"Minimal premium white T-shirt designed for everyday comfort."
@@ -735,6 +737,7 @@ const products = [
     name:"Premium Casual Shirt",
     category:"Shirts",
     price:899,
+    stock:10,
     old:1199,
     image:"https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?auto=format&fit=crop&w=900&q=85",
     description:"Modern casual shirt with a premium clean finish."
@@ -744,6 +747,7 @@ const products = [
     name:"Classic Denim Shirt",
     category:"Shirts",
     price:999,
+    stock:10,
     old:1299,
     image:"https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=85",
     description:"Versatile denim shirt for a modern everyday look."
@@ -753,6 +757,7 @@ const products = [
     name:"Premium Relaxed Fit Pants",
     category:"Pants",
     price:1099,
+    stock:10,
     old:1399,
     image:"https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=900&q=85",
     description:"Comfortable relaxed-fit pants with a premium silhouette."
@@ -762,6 +767,7 @@ const products = [
     name:"Modern Black Cargo Pants",
     category:"New Arrivals",
     price:1199,
+    stock:10,
     old:1499,
     image:"https://images.unsplash.com/photo-1517445312882-bc9910d016b5?auto=format&fit=crop&w=900&q=85",
     description:"Modern cargo pants made for streetwear-inspired styling."
@@ -771,6 +777,7 @@ const products = [
     name:"Urban Premium Shirt",
     category:"New Arrivals",
     price:949,
+    stock:10,
     old:1249,
     image:"https://images.unsplash.com/photo-1610652492500-ded49ceeb378?auto=format&fit=crop&w=900&q=85",
     description:"Urban-inspired premium shirt with a clean contemporary style."
@@ -780,11 +787,11 @@ const products = [
     name:"Essential Everyday T-Shirt",
     category:"T-Shirts",
     price:599,
+    stock:10,
     old:799,
     image:"https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=900&q=85",
     description:"A simple essential T-shirt for effortless everyday styling."
-  }
-];
+  }];
 
 let cart = JSON.parse(localStorage.getItem("fxCart") || "[]");
 
@@ -832,9 +839,9 @@ function viewProduct(id){
       <p style="color:#777;margin:15px 0">${p.description}</p>
 
       <div style="margin:12px 0;font-weight:700">
-        ${Number(p.stock ?? 0) > 0
-          ? "Stock Available: " + Number(p.stock ?? 0)
-          : "OUT OF STOCK"}
+        <div style="color:#16803a;font-weight:700">
+          Stock Available: ${Number(p.stock ?? 10)}
+        </div>
       </div>
 
       <div class="form-group">
