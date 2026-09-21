@@ -1052,24 +1052,36 @@ function placeOrder(event){
 
   localStorage.setItem("fxProducts",JSON.stringify(adminProducts));
 
-  const orders=JSON.parse(localStorage.getItem("fxOrders") || "[]");
-  orders.push(order);
-  localStorage.setItem("fxOrders",JSON.stringify(orders));
+  try {
+    const { error } = await supabaseClient
+      .from("orders")
+      .insert([order]);
 
-  cart=[];
-  saveCart();
-  updateCartCount();
+    if(error){
+      console.error("Supabase order error:", error);
+      alert("Order could not be submitted. Please try again.");
+      return;
+    }
 
-  closeModal("checkoutModal");
+    cart=[];
+    saveCart();
+    updateCartCount();
 
-  alert(
-    "ORDER CONFIRMED!\n\n"+
-    "Order ID: "+orderId+
-    "\nTotal: ৳"+total+
-    "\n\nThank you for shopping with FX Fashion Gallery."
-  );
+    closeModal("checkoutModal");
 
-  event.target.reset();
+    alert(
+      "ORDER CONFIRMED!\n\n"+
+      "Order ID: "+orderId+
+      "\nTotal: ৳"+total+
+      "\n\nThank you for shopping with FX Fashion Gallery."
+    );
+
+    event.target.reset();
+
+  } catch(err) {
+    console.error("Order submission error:", err);
+    alert("Something went wrong. Please try again.");
+  }
 }
 
 function searchProducts(){
