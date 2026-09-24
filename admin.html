@@ -28,16 +28,42 @@ button:hover{opacity:.9}
 .container{padding:14px 12px 30px}
 .card{padding:17px 15px}
 }
-</style>
-</head>
+#adminDashboard{display:none}\n</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>const SUPABASE_URL="https://rdclmzalbjdgxcizjdjq.supabase.co";const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkY2xtemFsYmpkZ3hjaXpqZGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyNjA4ODcsImV4cCI6MjEwNTgzNjg4N30.3HyvYLYGu6M247apzwvjqfDV1OwwHs7XW_rHh1f6GDs";const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);</script></head>
 <body>
 
 <header class="header">
   <div class="brand">FX <span>FASHION</span> GALLERY</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
   <div class="subtitle">Premium Store • Admin Dashboard</div>
+  <button onclick="adminLogout()" style="padding:9px 14px;background:#fff;color:#111;box-shadow:none">
+    LOGOUT
+  </button>
+</div>
 </header>
 
-<main class="container">
+<div id="adminLogin" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#f4f5f7">
+  <div style="width:100%;max-width:420px;background:#fff;border:1px solid #e5e5e5;border-radius:20px;padding:28px;box-shadow:0 12px 40px rgba(0,0,0,.08)">
+    <div style="text-align:center">
+      <div style="font-size:26px;font-weight:900">FX <span style="color:#e87900">FASHION</span> GALLERY</div>
+      <div style="margin-top:7px;color:#777;font-size:14px">Secure Admin Login</div>
+    </div>
+
+    <form id="adminLoginForm" style="display:grid;gap:14px;margin-top:25px">
+      <input id="adminEmail" type="email" placeholder="Admin Email" required
+      style="padding:14px;border:1px solid #ddd;border-radius:10px;font-size:15px">
+
+      <input id="adminPassword" type="password" placeholder="Password" required
+      style="padding:14px;border:1px solid #ddd;border-radius:10px;font-size:15px">
+
+      <button type="submit">LOGIN TO ADMIN</button>
+
+      <div id="loginMessage" style="text-align:center;font-size:13px;color:#d00;min-height:18px"></div>
+    </form>
+  </div>
+</div>
+
+<main id="adminDashboard" class="container">
 
   <div class="grid">
     <div class="card">
@@ -123,12 +149,23 @@ document.getElementById("productCount").textContent =
 
 
 
-function renderAdminOrders() {
-  const orders = JSON.parse(
-    localStorage.getItem("fxOrders") || "[]"
-  );
-
+async function renderAdminOrders() {
   const ordersBox = document.getElementById("ordersBox");
+
+  ordersBox.innerHTML =
+    '<div class="empty">Loading orders...</div>';
+
+  const { data: orders, error } = await supabaseClient
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Supabase orders error:", error);
+    ordersBox.innerHTML =
+      '<div class="empty">Could not load orders.</div>';
+    return;
+  }
 
   document.getElementById("orderCount").textContent =
     orders.length;
@@ -147,7 +184,7 @@ function renderAdminOrders() {
     return;
   }
 
-  ordersBox.innerHTML = orders.slice().reverse().map(order => `
+  ordersBox.innerHTML = orders.map(order => `
     <div style="padding:18px 0;border-bottom:1px solid #eee">
 
       <div style="font-size:13px;color:#777">
@@ -155,18 +192,19 @@ function renderAdminOrders() {
       </div>
 
       <div style="font-size:17px;font-weight:900;margin-top:5px">
-        ${order.customer.name}
+        ${order.customer_name}
       </div>
 
       <div style="margin-top:6px">
-        📞 ${order.customer.phone}
+        📞 ${order.customer_phone}
       </div>
 
       <div style="margin-top:6px;color:#555">
-        ${order.customer.address}
+        ${order.customer_address}
       </div>
 
       <div style="margin-top:12px;background:#fafafa;border:1px solid #eee;border-radius:10px;padding:12px">
+
         <div style="font-size:13px;font-weight:900;margin-bottom:8px">
           ORDER ITEMS
         </div>
@@ -175,6 +213,7 @@ function renderAdminOrders() {
           Array.isArray(order.items)
             ? order.items.map(item => `
               <div style="padding:9px 0;border-bottom:1px solid #eee">
+
                 <div style="font-weight:800">
                   ${item.name}
                 </div>
@@ -189,31 +228,37 @@ function renderAdminOrders() {
                   ৳${Number(item.price).toLocaleString()} × ${item.quantity}
                   = ৳${(Number(item.price) * Number(item.quantity)).toLocaleString()}
                 </div>
+
               </div>
             `).join("")
             : '<div style="font-size:13px;color:#777">No item details available.</div>'
         }
 
         <div style="margin-top:10px;font-size:13px">
-          Delivery: <strong>৳${Number(order.delivery || 0).toLocaleString()}</strong>
+          Delivery:
+          <strong>৳${Number(order.delivery_charge || 0).toLocaleString()}</strong>
         </div>
 
         <div style="margin-top:6px;font-size:14px;font-weight:900">
-          Subtotal: ৳${Number(order.subtotal || 0).toLocaleString()}
+          Subtotal:
+          ৳${Number(order.subtotal || 0).toLocaleString()}
         </div>
+
       </div>
 
       <div style="margin-top:10px;font-size:13px">
-        ${order.deliveryArea} • ${order.payment}
+        ${order.delivery_area} • ${order.payment_method}
       </div>
 
       <div style="margin-top:12px;font-weight:900">
-        Total: <span style="color:#e87900">
-          ৳${Number(order.total).toLocaleString()}
+        Total:
+        <span style="color:#e87900">
+          ৳${Number(order.total || 0).toLocaleString()}
         </span>
       </div>
 
       <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+
         <select
           onchange="updateOrderStatus('${order.id}', this.value)"
           style="padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-weight:700;background:#fff"
@@ -228,27 +273,25 @@ function renderAdminOrders() {
         <span style="display:inline-block;background:#fff3e8;color:#e87900;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:900">
           ${order.status || "New"}
         </span>
+
       </div>
 
     </div>
   `).join("");
 }
 
-function updateOrderStatus(orderId, newStatus) {
-  const orders = JSON.parse(
-    localStorage.getItem("fxOrders") || "[]"
-  );
+async function updateOrderStatus(orderId, newStatus) {
 
-  const order = orders.find(item => item.id === orderId);
+  const { error } = await supabaseClient
+    .from("orders")
+    .update({ status: newStatus })
+    .eq("id", orderId);
 
-  if (!order) return;
-
-  order.status = newStatus;
-
-  localStorage.setItem(
-    "fxOrders",
-    JSON.stringify(orders)
-  );
+  if (error) {
+    console.error("Status update error:", error);
+    alert("Could not update order.");
+    return;
+  }
 
   renderAdminOrders();
 }
@@ -298,7 +341,6 @@ function renderAdminProducts() {
 
 const productsBox = document.getElementById("productsBox");
 
-renderAdminOrders();
 renderAdminProducts();
 </script>
 
@@ -386,6 +428,60 @@ document.getElementById("productForm").addEventListener("submit", function (even
     saveProduct("");
   }
 });
+</script>
+
+
+<script>
+document.getElementById("adminLoginForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  const email=document.getElementById("adminEmail").value.trim();
+  const password=document.getElementById("adminPassword").value;
+  const message=document.getElementById("loginMessage");
+
+  message.style.color="#777";
+  message.textContent="Signing in...";
+
+  const {data,error}=await supabaseClient.auth.signInWithPassword({
+    email:email,
+    password:password
+  });
+
+  if(error){
+    console.error(error);
+    message.style.color="#d00";
+    message.textContent="Invalid email or password.";
+    return;
+  }
+
+  document.getElementById("adminLogin").style.display="none";
+  document.getElementById("adminDashboard").style.display="block";
+
+  renderAdminOrders();
+});
+</script>
+
+
+<script>
+async function checkAdminSession(){
+  const {data}=await supabaseClient.auth.getSession();
+
+  if(data.session){
+    document.getElementById("adminLogin").style.display="none";
+    document.getElementById("adminDashboard").style.display="block";
+    renderAdminOrders();
+  }else{
+    document.getElementById("adminLogin").style.display="flex";
+    document.getElementById("adminDashboard").style.display="none";
+  }
+}
+
+async function adminLogout(){
+  await supabaseClient.auth.signOut();
+  location.reload();
+}
+
+checkAdminSession();
 </script>
 
 </body>
