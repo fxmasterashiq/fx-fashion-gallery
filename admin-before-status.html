@@ -176,44 +176,14 @@ function renderAdminOrders() {
         </span>
       </div>
 
-      <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <select
-          onchange="updateOrderStatus('${order.id}', this.value)"
-          style="padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-weight:700;background:#fff"
-        >
-          ${["New","Confirmed","Processing","Shipped","Delivered","Cancelled"].map(status => `
-            <option value="${status}" ${order.status === status ? "selected" : ""}>
-              ${status}
-            </option>
-          `).join("")}
-        </select>
-
+      <div style="margin-top:10px">
         <span style="display:inline-block;background:#fff3e8;color:#e87900;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:900">
-          ${order.status || "New"}
+          ${order.status}
         </span>
       </div>
 
     </div>
   `).join("");
-}
-
-function updateOrderStatus(orderId, newStatus) {
-  const orders = JSON.parse(
-    localStorage.getItem("fxOrders") || "[]"
-  );
-
-  const order = orders.find(item => item.id === orderId);
-
-  if (!order) return;
-
-  order.status = newStatus;
-
-  localStorage.setItem(
-    "fxOrders",
-    JSON.stringify(orders)
-  );
-
-  renderAdminOrders();
 }
 
 function renderAdminProducts() {
