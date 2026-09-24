@@ -166,6 +166,43 @@ function renderAdminOrders() {
         ${order.customer.address}
       </div>
 
+      <div style="margin-top:12px;background:#fafafa;border:1px solid #eee;border-radius:10px;padding:12px">
+        <div style="font-size:13px;font-weight:900;margin-bottom:8px">
+          ORDER ITEMS
+        </div>
+
+        ${
+          Array.isArray(order.items)
+            ? order.items.map(item => `
+              <div style="padding:9px 0;border-bottom:1px solid #eee">
+                <div style="font-weight:800">
+                  ${item.name}
+                </div>
+
+                <div style="font-size:12px;color:#666;margin-top:4px">
+                  ${item.size ? "Size: " + item.size : ""}
+                  ${item.color ? " • Color: " + item.color : ""}
+                  • Qty: ${item.quantity}
+                </div>
+
+                <div style="font-size:13px;font-weight:800;margin-top:4px">
+                  ৳${Number(item.price).toLocaleString()} × ${item.quantity}
+                  = ৳${(Number(item.price) * Number(item.quantity)).toLocaleString()}
+                </div>
+              </div>
+            `).join("")
+            : '<div style="font-size:13px;color:#777">No item details available.</div>'
+        }
+
+        <div style="margin-top:10px;font-size:13px">
+          Delivery: <strong>৳${Number(order.delivery || 0).toLocaleString()}</strong>
+        </div>
+
+        <div style="margin-top:6px;font-size:14px;font-weight:900">
+          Subtotal: ৳${Number(order.subtotal || 0).toLocaleString()}
+        </div>
+      </div>
+
       <div style="margin-top:10px;font-size:13px">
         ${order.deliveryArea} • ${order.payment}
       </div>
