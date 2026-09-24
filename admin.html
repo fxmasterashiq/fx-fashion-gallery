@@ -59,9 +59,7 @@ button:hover{opacity:.9}
   <div class="section-title">Orders</div>
 
   <div class="panel">
-    <div class="empty" id="ordersBox">
-      No orders available yet.
-    </div>
+    <div id="ordersBox"></div>
   </div>
 
   
@@ -124,6 +122,70 @@ document.getElementById("productCount").textContent =
   Array.isArray(products) ? products.length : 0;
 
 
+
+function renderAdminOrders() {
+  const orders = JSON.parse(
+    localStorage.getItem("fxOrders") || "[]"
+  );
+
+  const ordersBox = document.getElementById("ordersBox");
+
+  document.getElementById("orderCount").textContent =
+    orders.length;
+
+  const sales = orders.reduce(
+    (total, order) => total + Number(order.total || 0),
+    0
+  );
+
+  document.getElementById("salesTotal").textContent =
+    "৳" + sales.toLocaleString();
+
+  if (!orders.length) {
+    ordersBox.innerHTML =
+      '<div class="empty">No orders available yet.</div>';
+    return;
+  }
+
+  ordersBox.innerHTML = orders.slice().reverse().map(order => `
+    <div style="padding:18px 0;border-bottom:1px solid #eee">
+
+      <div style="font-size:13px;color:#777">
+        Order ID: ${order.id}
+      </div>
+
+      <div style="font-size:17px;font-weight:900;margin-top:5px">
+        ${order.customer.name}
+      </div>
+
+      <div style="margin-top:6px">
+        📞 ${order.customer.phone}
+      </div>
+
+      <div style="margin-top:6px;color:#555">
+        ${order.customer.address}
+      </div>
+
+      <div style="margin-top:10px;font-size:13px">
+        ${order.deliveryArea} • ${order.payment}
+      </div>
+
+      <div style="margin-top:12px;font-weight:900">
+        Total: <span style="color:#e87900">
+          ৳${Number(order.total).toLocaleString()}
+        </span>
+      </div>
+
+      <div style="margin-top:10px">
+        <span style="display:inline-block;background:#fff3e8;color:#e87900;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:900">
+          ${order.status}
+        </span>
+      </div>
+
+    </div>
+  `).join("");
+}
+
 function renderAdminProducts() {
   const savedProducts = JSON.parse(
     localStorage.getItem("fxProducts") || "[]"
@@ -169,6 +231,7 @@ function renderAdminProducts() {
 
 const productsBox = document.getElementById("productsBox");
 
+renderAdminOrders();
 renderAdminProducts();
 </script>
 
