@@ -3,774 +3,260 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>FX Fashion Gallery — Admin</title>
-
+<meta name="theme-color" content="#111111">
+<title>FX Fashion Gallery | Admin</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:Arial,sans-serif;
-  background:#f5f5f5;
-  color:#111;
-}
-header{
-  background:#111;
-  color:#fff;
-  padding:18px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.logo{
-  font-size:22px;
-  font-weight:800;
-}
-.logo span{color:#ff7a00}
-.container{
-  max-width:1100px;
-  margin:25px auto;
-  padding:0 15px;
-}
-.cards{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-  margin-bottom:25px;
-}
-.card{
-  background:#fff;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 3px 15px rgba(0,0,0,.08);
-}
-.card h3{font-size:14px;color:#777}
-.card strong{
-  display:block;
-  font-size:28px;
-  margin-top:8px;
-}
-.panel{
-  background:#fff;
-  padding:20px;
-  border-radius:12px;
-  margin-bottom:20px;
-  box-shadow:0 3px 15px rgba(0,0,0,.08);
-}
-.panel h2{
-  margin-bottom:18px;
-}
-input,select,textarea{
-  width:100%;
-  padding:12px;
-  margin:7px 0 12px;
-  border:1px solid #ddd;
-  border-radius:8px;
-  font-size:15px;
-}
-button{
-  border:0;
-  padding:11px 16px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-}
-.add{
-  background:#ff7a00;
-  color:#fff;
-}
-.delete{
-  background:#e53935;
-  color:#fff;
-}
-.order-details{
-  margin-top:12px;
-  padding:10px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  background:#fafafa;
-}
-
-.order-details summary{
-  cursor:pointer;
-  font-weight:700;
-  padding:5px;
-}
-
-.order-items{
-  margin-top:10px;
-}
-
-.order-item{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:8px 0;
-  border-bottom:1px solid #eee;
-  font-size:14px;
-}
-
-.edit{
-  background:#1976d2;
-  color:#fff;
-}
-.clear{
-  background:#111;
-  color:#fff;
-}
-.product{
-  border:1px solid #eee;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:10px;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:center;
-}
-.product img{
-  width:65px;
-  height:65px;
-  object-fit:cover;
-  border-radius:8px;
-}
-.product-info{
-  flex:1;
-}
-.product-info b{display:block}
-.order{
-  border:1px solid #eee;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:12px;
-}
-.order strong{font-size:17px}
-.small{
-  color:#777;
-  font-size:13px;
-  margin-top:5px;
-}
-.empty{
-  text-align:center;
-  color:#777;
-  padding:20px;
-}
+body{font-family:Arial,Helvetica,sans-serif;background:#f6f6f6;color:#111}
+.header{background:#111;color:#fff;padding:20px}
+.brand{font-size:22px;font-weight:900;letter-spacing:1px}
+.brand span{color:#e87900}
+.subtitle{margin-top:5px;color:#aaa;font-size:13px}
+.container{max-width:1100px;margin:auto;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,.04)}
+.label{font-size:13px;color:#777}
+.value{font-size:28px;font-weight:900;margin-top:8px}
+.orange{color:#e87900}
+.section-title{font-size:20px;font-weight:900;margin:25px 0 12px}
+.panel{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:20px}
+.empty{text-align:center;padding:35px 15px;color:#777}
+button{border:0;border-radius:9px;padding:12px 18px;background:#e87900;color:#fff;font-weight:800;cursor:pointer}
+button:hover{opacity:.9}
 @media(max-width:700px){
-  .cards{grid-template-columns:1fr}
-  .product{align-items:flex-start}
+.grid{grid-template-columns:1fr}
+.container{padding:14px}
+.card{padding:17px}
 }
-
-.login-screen{
-  position:fixed;
-  inset:0;
-  background:#f5f5f5;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:99999;
-}
-.login-box{
-  width:min(92%,380px);
-  background:#fff;
-  padding:30px;
-  border-radius:16px;
-  box-shadow:0 10px 35px rgba(0,0,0,.12);
-}
-.login-box h2{
-  margin-bottom:8px;
-}
-.login-box p{
-  color:#666;
-  margin-bottom:20px;
-}
-.login-box input{
-  width:100%;
-  padding:13px;
-  border:1px solid #ddd;
-  border-radius:9px;
-  font-size:16px;
-  margin-bottom:12px;
-}
-.login-box button{
-  width:100%;
-  padding:13px;
-  border:0;
-  border-radius:9px;
-  background:#111;
-  color:#fff;
-  font-size:16px;
-  font-weight:700;
-  cursor:pointer;
-}
-.login-error{
-  color:#dc3545;
-  font-size:14px;
-  margin-top:10px;
-  display:none;
-}
-
-
-.login-screen{
-  position:fixed;
-  inset:0;
-  background:#f5f5f5;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:99999;
-}
-.login-box{
-  width:min(92%,380px);
-  background:#fff;
-  padding:30px;
-  border-radius:16px;
-  box-shadow:0 10px 35px rgba(0,0,0,.12);
-}
-.login-box h2{
-  margin-bottom:8px;
-}
-.login-box p{
-  color:#666;
-  margin-bottom:20px;
-}
-.login-box input{
-  width:100%;
-  padding:13px;
-  border:1px solid #ddd;
-  border-radius:9px;
-  font-size:16px;
-  margin-bottom:12px;
-}
-.login-box button{
-  width:100%;
-  padding:13px;
-  border:0;
-  border-radius:9px;
-  background:#111;
-  color:#fff;
-  font-size:16px;
-  font-weight:700;
-  cursor:pointer;
-}
-.login-error{
-  color:#dc3545;
-  font-size:14px;
-  margin-top:10px;
-  display:none;
-}
-
 </style>
 </head>
-
 <body>
 
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <h2>FX Fashion Gallery</h2>
-    <p>Admin Login</p>
-
-    <input id="adminUsername" type="text" placeholder="Username" autocomplete="username">
-    <input id="adminPassword" type="password" placeholder="Password" autocomplete="current-password">
-
-    <button type="button" onclick="adminLogin()">Login</button>
-
-    <div class="login-error" id="loginError">
-      Invalid username or password.
-    </div>
-  </div>
-</div>
-
-
-
-
-
-<header>
-  <div class="logo">FX <span>Fashion Gallery</span></div>
-  <div>ADMIN PANEL</div>
+<header class="header">
+  <div class="brand">FX <span>FASHION</span> GALLERY</div>
+  <div class="subtitle">Premium Store • Admin Dashboard</div>
 </header>
 
-<div class="container">
+<main class="container">
 
-  <div class="cards">
+  <div class="grid">
     <div class="card">
-      <h3>Total Products</h3>
-      <strong id="productCount">0</strong>
+      <div class="label">TOTAL PRODUCTS</div>
+      <div class="value" id="productCount">0</div>
     </div>
 
     <div class="card">
-      <h3>Total Orders</h3>
-      <strong id="orderCount">0</strong>
+      <div class="label">TOTAL ORDERS</div>
+      <div class="value orange" id="orderCount">0</div>
     </div>
 
     <div class="card">
-      <h3>Total Sales</h3>
-      <strong id="salesCount">৳0</strong>
+      <div class="label">TOTAL SALES</div>
+      <div class="value" id="salesTotal">৳0</div>
     </div>
   </div>
 
-  <div class="panel">
-    <h2>➕ Add New Product</h2>
-
-    <input id="pName" placeholder="Product Name">
-
-    <input id="pPrice" type="number" placeholder="Price (BDT)">
-
-    <input id="pStock" type="number" min="0" placeholder="Stock Quantity" value="0">
-
-    <input id="pOldPrice" type="number" placeholder="Old Price (optional)">
-
-    <select id="pCategory">
-      <option value="T-Shirts">T-Shirts</option>
-      <option value="Shirts">Shirts</option>
-      <option value="Pants">Pants</option>
-      <option value="New Arrivals">New Arrivals</option>
-    </select>
-
-    <input id="pImage" placeholder="Product Image URL">
-<input id="pImageFile" type="file" accept="image/*" onchange="handleImageUpload(event)">
-<div id="imageUploadStatus" class="small"></div>
-
-    <textarea id="pDescription" placeholder="Product Description"></textarea>
-
-    <button class="add" onclick="handleProductSave()">ADD PRODUCT</button>
-  </div>
+  <div class="section-title">Orders</div>
 
   <div class="panel">
-    <h2>🛍️ Products</h2>
-    <div id="productList"></div>
+    <div class="empty" id="ordersBox">
+      No orders available yet.
+    </div>
   </div>
 
-  <div class="panel">
-    <h2>📦 Orders</h2>
-    <input
-  id="orderSearch"
-  type="text"
-  placeholder="Search Order ID, Name or Phone..."
-  oninput="renderOrders()"
-  style="width:100%;box-sizing:border-box;padding:14px 16px;margin:0 0 15px;border:1px solid #ddd;border-radius:10px;font-size:16px;"
->
-<div id="orderList"></div>
+  
+<div class="section-title">Add Product</div>
 
-    <button class="clear" onclick="clearOrders()">
-      Clear All Orders
-    </button>
-  </div>
+<div class="panel">
+<form id="productForm" style="display:grid;gap:14px">
 
+<input id="productName" type="text" placeholder="Product name" required
+style="padding:13px;border:1px solid #ddd;border-radius:9px;font-size:15px">
+
+<select id="productCategory" required
+style="padding:13px;border:1px solid #ddd;border-radius:9px;font-size:15px">
+<option value="">Select category</option>
+<option>T-Shirts</option>
+<option>Shirts</option>
+<option>Pants</option>
+</select>
+
+<input id="productPrice" type="number" min="0" placeholder="Price (৳)" required
+style="padding:13px;border:1px solid #ddd;border-radius:9px;font-size:15px">
+
+<input id="productOldPrice" type="number" min="0" placeholder="Old price (optional)"
+style="padding:13px;border:1px solid #ddd;border-radius:9px;font-size:15px">
+
+<input id="productSizes" type="text" placeholder="Sizes e.g. M,L,XL,XXL"
+style="padding:13px;border:1px solid #ddd;border-radius:9px;font-size:15px">
+
+<input id="productColors" type="text" placeholder="Colors e.g. Black,White"
+style="padding:13px;border:1px solid #ddd;border-radius:9px;font-size:15px">
+
+<label style="font-weight:800;font-size:14px">Product Image</label>
+
+<input id="productImage" type="file" accept="image/*"
+style="padding:10px;border:1px solid #ddd;border-radius:9px">
+
+<img id="imagePreview" alt="Image preview"
+style="display:none;width:150px;height:150px;object-fit:cover;border-radius:12px;border:1px solid #ddd">
+
+<textarea id="productDescription" placeholder="Product description" rows="4"
+style="padding:13px;border:1px solid #ddd;border-radius:9px;font-size:15px"></textarea>
+
+<button type="submit">ADD PRODUCT</button>
+
+</form>
 </div>
 
+<div class="section-title">Product List</div>
+
+
+  <div class="panel">
+    <div id="productsBox"></div>
+  </div>
+
+</main>
+
+<script src="products.js"></script>
 <script>
+document.getElementById("productCount").textContent =
+  Array.isArray(products) ? products.length : 0;
 
-function getProducts(){
-  return JSON.parse(localStorage.getItem("fxProducts") || "[]");
-}
 
-function saveProducts(products){
-  localStorage.setItem("fxProducts",JSON.stringify(products));
-}
-
-function getOrders(){
-  return JSON.parse(localStorage.getItem("fxOrders") || "[]");
-}
-
-function addProduct(){
-
-  const name=document.getElementById("pName").value.trim();
-  const price=document.getElementById("pPrice").value;
-  const oldPrice=document.getElementById("pOldPrice").value;
-  const category=document.getElementById("pCategory").value;
-  function handleImageUpload(event){
-    const file=event.target.files[0];
-    if(!file) return;
-    const reader=new FileReader();
-    reader.onload=function(e){
-      const img=new Image();
-      img.onload=function(){
-        const max=1000;
-        const scale=Math.min(1,max/Math.max(img.width,img.height));
-        const canvas=document.createElement("canvas");
-        canvas.width=Math.round(img.width*scale);
-        canvas.height=Math.round(img.height*scale);
-        canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
-        document.getElementById("pImage").value=canvas.toDataURL("image/jpeg",0.8);
-        document.getElementById("imageUploadStatus").textContent="Image uploaded successfully.";
-      };
-      img.src=e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-
-  const image=document.getElementById("pImage").value.trim();
-  const description=document.getElementById("pDescription").value.trim();
-  const stock=document.getElementById("pStock").value;
-
-  if(!name || !price || !image){
-    alert("Product Name, Price and Image URL are required.");
-    return;
-  }
-
-  const products=getProducts();
-
-  products.push({
-    id:Date.now(),
-    name:name,
-    price:Number(price),
-    oldPrice:Number(oldPrice || 0),
-    category:category,
-    image:image,
-    description:description
-  });
-
-  saveProducts(products);
-
-  document.getElementById("pName").value="";
-  document.getElementById("pPrice").value="";
-  document.getElementById("pStock").value="";
-  document.getElementById("pOldPrice").value="";
-  document.getElementById("pImage").value="";
-  document.getElementById("pDescription").value="";
-
-  render();
-
-  alert("Product added successfully!");
-}
-
-function editProduct(id){
-  const products=getProducts();
-  const p=products.find(x=>String(x.id)===String(id));
-
-  if(!p) return;
-
-  document.getElementById("pName").value=p.name || "";
-  document.getElementById("pPrice").value=p.price || "";
-  document.getElementById("pStock").value=p.stock ?? 0;
-  document.getElementById("pOldPrice").value=p.oldPrice || "";
-  document.getElementById("pCategory").value=p.category || "T-Shirts";
-  document.getElementById("pImage").value=p.image || "";
-  document.getElementById("pDescription").value=p.description || "";
-
-  const btn=document.querySelector('.add');
-  btn.textContent="SAVE CHANGES";
-  btn.dataset.editId=id;
-
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function saveEditedProduct(){
-  const id=document.querySelector('.add').dataset.editId;
-  if(!id) return false;
-
-  const name=document.getElementById("pName").value.trim();
-  const price=document.getElementById("pPrice").value;
-  const oldPrice=document.getElementById("pOldPrice").value;
-  const category=document.getElementById("pCategory").value;
-  const image=document.getElementById("pImage").value.trim();
-  const description=document.getElementById("pDescription").value.trim();
-  const stock=document.getElementById("pStock").value;
-
-  if(!name || !price || !image){
-    alert("Product Name, Price and Image URL are required.");
-    return true;
-  }
-
-  const products=getProducts();
-  const index=products.findIndex(x=>String(x.id)===String(id));
-
-  if(index===-1) return true;
-
-  products[index]={
-    ...products[index],
-    name:name,
-    price:Number(price),
-    oldPrice:Number(oldPrice || 0),
-    category:category,
-    image:image,
-    description:description,
-    stock:Number(stock || 0)
-  };
-
-  saveProducts(products);
-
-  document.getElementById("pName").value="";
-  document.getElementById("pPrice").value="";
-  document.getElementById("pOldPrice").value="";
-  document.getElementById("pImage").value="";
-  document.getElementById("pDescription").value="";
-
-  const btn=document.querySelector('.add');
-  btn.textContent="ADD PRODUCT";
-  delete btn.dataset.editId;
-
-  render();
-  alert("Product updated successfully!");
-  return true;
-}
-
-function handleProductSave(){
-  const btn=document.querySelector('.add');
-
-  if(btn.dataset.editId){
-    saveEditedProduct();
-    return;
-  }
-
-  addProduct();
-}
-
-function deleteProduct(id){
-
-  if(!confirm("Delete this product?")) return;
-
-  let products=getProducts();
-
-  products=products.filter(p=>p.id!==id);
-
-  saveProducts(products);
-
-  render();
-}
-
-function renderProducts(){
-
-  const products=getProducts();
-  const box=document.getElementById("productList");
-
-  document.getElementById("productCount").textContent=products.length;
-
-  if(!products.length){
-    box.innerHTML='<div class="empty">No products added yet.</div>';
-    return;
-  }
-
-  box.innerHTML=products.map(p=>`
-
-    <div class="product">
-
-      <img src="${p.image}" onerror="this.style.display='none'">
-
-      <div class="product-info">
-        <b>${escapeHTML(p.name)}</b>
-        <span>৳${p.price}</span>
-        <div class="small">${escapeHTML(p.category)}</div>
-        <div class="small"><b>${Number(p.stock || 0) > 0 ? "Stock: " + Number(p.stock || 0) : "OUT OF STOCK"}</b></div>
-      </div>
-
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="edit" onclick="editProduct(${p.id})">
-          Edit
-        </button>
-        <button class="delete" onclick="deleteProduct(${p.id})">
-          Delete
-        </button>
-      </div>
-
-    </div>
-
-  `).join("");
-}
-
-function renderOrders(){
-
-  const orders=getOrders();
-  const box=document.getElementById("orderList");
-  const searchInput=document.getElementById("orderSearch");
-  const search=(searchInput ? searchInput.value : "").trim().toLowerCase();
-
-  const filteredOrders=orders.filter(o=>{
-    if(!search) return true;
-
-    return [
-      o.id,
-      o.name,
-      o.phone,
-      o.address
-    ].some(value =>
-      String(value || "").toLowerCase().includes(search)
-    );
-  });
-
-  document.getElementById("orderCount").textContent=orders.length;
-
-  let total=0;
-
-  orders.forEach(o=>{
-    total += Number(o.total || 0);
-  });
-
-  document.getElementById("salesCount").textContent="৳"+total;
-
-  if(!orders.length){
-    box.innerHTML='<div class="empty">No orders yet.</div>';
-    return;
-  }
-
-  if(!filteredOrders.length){
-    box.innerHTML='<div class="empty">No matching orders found.</div>';
-    return;
-  }
-
-  box.innerHTML=filteredOrders.map(o=>`
-
-    <div class="order">
-
-      <strong>Order #${escapeHTML(String(o.id || ""))}</strong>
-
-      <div class="small">
-        Customer: ${escapeHTML(o.name || "")}
-      </div>
-
-      <div class="small">
-        Phone: ${escapeHTML(o.phone || "")}
-      </div>
-
-      <div class="small">
-        Address: ${escapeHTML(o.address || "")}
-      </div>
-
-      <div class="small">
-        Total: ৳${Number(o.total || 0)}
-      </div>
-
-      <button type="button"
-        onclick="deleteOrder('${String(o.id || "").replace("'", "\\'")}')"
-        style="margin-top:10px;background:#dc3545;color:white;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;">
-        Delete Order
-      </button>
-
-      <details class="order-details">
-        <summary>View Order Details</summary>
-        <div class="order-items">
-          ${
-            Array.isArray(o.items) && o.items.length
-            ? o.items.map(item => {
-                const name = item.name || item.productName || "Product";
-                const qty = Number(item.quantity || item.qty || 1);
-                const price = Number(item.price || 0);
-                return `
-                  <div class="order-item">
-                    <span>${escapeHTML(String(name))}</span>
-                    <span>Qty: ${qty}</span>
-                    <strong>৳${price * qty}</strong>
-                  </div>
-                `;
-              }).join("")
-            : '<div class="small">Product details not available for this order.</div>'
-          }
-        </div>
-      </details>
-
-      <div class="small">
-        Status:
-        <select onchange="updateOrderStatus('${String(o.id || "").replace("'", "\\'")}', this.value)">
-          ${["Pending","Confirmed","Shipped","Delivered","Cancelled"].map(st =>
-            `<option value="${st}" ${(o.status || "Pending") === st ? "selected" : ""}>${st}</option>`
-          ).join("")}
-        </select>
-      </div>
-
-    </div>
-
-  `).join("");
-}
-
-function updateOrderStatus(orderId, status){
-
-  const orders = getOrders();
-
-  const updated = orders.map(o => {
-    if(String(o.id) === String(orderId)){
-      return {
-        ...o,
-        status: status
-      };
-    }
-    return o;
-  });
-
-  localStorage.setItem("fxOrders", JSON.stringify(updated));
-
-  renderOrders();
-
-}
-
-function deleteOrder(orderId){
-  if(!confirm("Delete this order?")) return;
-
-  const orders = getOrders().filter(
-    o => String(o.id || "") !== String(orderId)
+function renderAdminProducts() {
+  const savedProducts = JSON.parse(
+    localStorage.getItem("fxProducts") || "[]"
   );
 
-  localStorage.setItem("fxOrders", JSON.stringify(orders));
-  render();
+  const allProducts = [
+    ...(Array.isArray(products) ? products : []),
+    ...savedProducts
+  ];
+
+  document.getElementById("productCount").textContent =
+    allProducts.length;
+
+  if (!allProducts.length) {
+    productsBox.innerHTML =
+      '<div class="empty">No products available.</div>';
+    return;
+  }
+
+  productsBox.innerHTML = allProducts.map(product => `
+    <div style="padding:16px 0;border-bottom:1px solid #eee">
+      ${
+        product.image
+          ? `<img src="${product.image}" alt=""
+              style="width:90px;height:90px;object-fit:cover;border-radius:10px;margin-bottom:10px">`
+          : ""
+      }
+      <div style="font-weight:900;font-size:16px">
+        ${product.name}
+      </div>
+
+      <div style="color:#777;font-size:13px;margin-top:5px">
+        ${product.category} •
+        ${product.stock ? "Available" : "Out of Stock"}
+      </div>
+
+      <div style="margin-top:8px;font-weight:900;color:#e87900">
+        ৳${product.price}
+      </div>
+    </div>
+  `).join("");
 }
 
-function clearOrders(){
+const productsBox = document.getElementById("productsBox");
 
-  if(!confirm("Delete all orders?")) return;
-
-  localStorage.removeItem("fxOrders");
-
-  render();
-}
-
-function escapeHTML(text){
-
-  return String(text)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-function render(){
-  renderProducts();
-  renderOrders();
-}
-
-render();
-
+renderAdminProducts();
 </script>
 
 
 <script>
-function adminLogin(){
-  const username = document.getElementById("adminUsername").value.trim();
-  const password = document.getElementById("adminPassword").value;
+const productImageInput = document.getElementById("productImage");
+const imagePreview = document.getElementById("imagePreview");
 
-  if(username === "admin" && password === "123456"){
-    sessionStorage.setItem("fxAdminLoggedIn", "true");
+productImageInput.addEventListener("change", function () {
+  const file = this.files[0];
 
-    const screen = document.getElementById("loginScreen");
-    if(screen){
-      screen.style.display = "none";
-    }
-  }else{
-    const error = document.getElementById("loginError");
-    if(error){
-      error.textContent = "Invalid username or password.";
-      error.style.display = "block";
-    }
+  if (!file) {
+    imagePreview.style.display = "none";
+    imagePreview.removeAttribute("src");
+    return;
   }
-}
 
+  const reader = new FileReader();
 
+  reader.onload = function (event) {
+    imagePreview.src = event.target.result;
+    imagePreview.style.display = "block";
+  };
 
-document.addEventListener("DOMContentLoaded", function(){
-  if(sessionStorage.getItem("fxAdminLoggedIn") === "true"){
-    document.getElementById("loginScreen").style.display="none";
-  }
+  reader.readAsDataURL(file);
 });
-</script>
 
+document.getElementById("productForm").addEventListener("submit", function (event) {
+  event.preventDefault();
 
-<script>
+  const imageFile = document.getElementById("productImage").files[0];
 
+  const product = {
+    id: Date.now(),
+    name: document.getElementById("productName").value.trim(),
+    category: document.getElementById("productCategory").value,
+    price: Number(document.getElementById("productPrice").value),
+    oldPrice: Number(document.getElementById("productOldPrice").value) || 0,
+    sizes: document.getElementById("productSizes").value
+      .split(",")
+      .map(x => x.trim())
+      .filter(Boolean),
+    colors: document.getElementById("productColors").value
+      .split(",")
+      .map(x => x.trim())
+      .filter(Boolean),
+    description: document.getElementById("productDescription").value.trim(),
+    stock: true,
+    image: ""
+  };
 
-document.addEventListener("DOMContentLoaded", function(){
-  if(sessionStorage.getItem("fxAdminLoggedIn") === "true"){
-    document.getElementById("loginScreen").style.display="none";
+  const saveProduct = (imageData) => {
+    product.image = imageData || "";
+
+    const saved = JSON.parse(
+      localStorage.getItem("fxProducts") || "[]"
+    );
+
+    saved.push(product);
+
+    localStorage.setItem(
+      "fxProducts",
+      JSON.stringify(saved)
+    );
+
+    alert("Product saved successfully!");
+
+    this.reset();
+
+    imagePreview.style.display = "none";
+    imagePreview.removeAttribute("src");
+
+    renderAdminProducts();
+  };
+
+  if (imageFile) {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      saveProduct(event.target.result);
+    };
+
+    reader.readAsDataURL(imageFile);
+  } else {
+    saveProduct("");
   }
 });
 </script>
 
 </body>
 </html>
-
